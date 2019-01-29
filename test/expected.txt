@@ -66,6 +66,10 @@
 || 	Parameters: INDEX
 || 	Example: delete 1
 || 
+|| delete_email: Deletes a person by the email entered.
+|| 	Parameters: EMAIL
+|| 	Example: delete_email johnd@gmail.com
+|| 
 || clear: Clears address book permanently.
 || 	Example: clear
 || 
@@ -274,6 +278,15 @@
 || Enter command: || [Command entered:  list]
 || 
 || 0 persons found!
+|| ===================================================
+|| Enter command: || [Command entered:  add Tom Doe p/99912222 e/tomd@gmail.com]
+|| New person added: Tom Doe, Phone: 99912222, Email: tomd@gmail.com
+|| ===================================================
+|| Enter command: || [Command entered:  delete_email tomd@gmail.com]
+|| Deleted Person: Tom Doe  Phone Number: 99912222  Email: tomd@gmail.com
+|| ===================================================
+|| Enter command: || [Command entered:  clear]
+|| Address book has been cleared!
 || ===================================================
 || Enter command: || [Command entered:  exit]
 || Exiting Address Book... Good bye!

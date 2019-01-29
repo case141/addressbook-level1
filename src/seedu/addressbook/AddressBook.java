@@ -574,7 +574,9 @@ public class AddressBook {
     private static String executeDeletePersonByEmail(String commandArgs){
         //retrieves person with email entered
         final String[] personFound = getPersonWithEmailEntered(commandArgs);
-
+        if (personFound.length == 0) {
+            return getMessageForInvalidCommandInput(COMMAND_DELETE_BY_EMAIL_WORD, getUsageInfoForDeleteByEmailCommand());
+        }
         //  returns message + details of person deleted successfully
         return deletePersonFromAddressBook(personFound) ? getMessageForSuccessfulDelete(personFound) // success
                 : MESSAGE_PERSON_NOT_IN_ADDRESSBOOK; // not found
@@ -593,7 +595,7 @@ public class AddressBook {
                 return person;
             }
         }
-        return null;
+        return new String[0];
     }
 
     /**
