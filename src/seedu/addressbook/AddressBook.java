@@ -121,6 +121,11 @@ public class AddressBook {
     private static final String COMMAND_DELETE_PARAMETER = "INDEX";
     private static final String COMMAND_DELETE_EXAMPLE = COMMAND_DELETE_WORD + " 1";
 
+    private static final String COMMAND_DELETE_BY_EMAIL_WORD = "delete_email"; //assume email is unique
+    private static final String COMMAND_DELETE_BY_EMAIL_DESC = "Deletes a person by the email entered.";
+    private static final String COMMAND_DELETE_BY_EMAIL_PARAMETER = "EMAIL";
+    private static final String COMMAND_DELETE_BY_EMAIL_EXAMPLE = COMMAND_DELETE_BY_EMAIL_WORD + " johnd@gmail.com";
+
     private static final String COMMAND_CLEAR_WORD = "clear";
     private static final String COMMAND_CLEAR_DESC = "Clears address book permanently.";
     private static final String COMMAND_CLEAR_EXAMPLE = COMMAND_CLEAR_WORD;
@@ -377,6 +382,8 @@ public class AddressBook {
             return executeListAllPersonsInAddressBook();
         case COMMAND_DELETE_WORD:
             return executeDeletePerson(commandArgs);
+        case COMMAND_DELETE_BY_EMAIL_WORD:
+            return executeDeletePersonByEmail(commandArgs);
         case COMMAND_CLEAR_WORD:
             return executeClearAddressBook();
         case COMMAND_HELP_WORD:
@@ -556,6 +563,37 @@ public class AddressBook {
      */
     private static String getMessageForSuccessfulDelete(String[] deletedPerson) {
         return String.format(MESSAGE_DELETE_PERSON_SUCCESS, getMessageForFormattedPersonData(deletedPerson));
+    }
+
+    /**
+     * Deletes a person by the email entered. (assuming that email is unique)
+     *
+     * @param commandArgs full command args string from the user
+     * @return feedback display message for the operation result
+     */
+    private static String executeDeletePersonByEmail(String commandArgs){
+        //retrieves person with email entered
+        final String[] personFound = getPersonWithEmailEntered(commandArgs);
+
+        //  returns message + details of person deleted successfully
+        return deletePersonFromAddressBook(personFound) ? getMessageForSuccessfulDelete(personFound) // success
+                : MESSAGE_PERSON_NOT_IN_ADDRESSBOOK; // not found
+    }
+
+    /**
+     * Retrieves all persons in the full model with email entered.
+     *
+     * @param emailEntered of person to delete
+     * @return list of persons in full model with email entered.
+     */
+    private static String[] getPersonWithEmailEntered(String emailEntered) {
+        for (String[] person : getAllPersonsInAddressBook()) {
+            final String email = getEmailFromPerson(person);
+            if (email.equals(emailEntered)) {
+                return person;
+            }
+        }
+        return null;
     }
 
     /**
@@ -1086,6 +1124,7 @@ public class AddressBook {
                 + getUsageInfoForFindCommand() + LS
                 + getUsageInfoForViewCommand() + LS
                 + getUsageInfoForDeleteCommand() + LS
+                + getUsageInfoForDeleteByEmailCommand() + LS
                 + getUsageInfoForClearCommand() + LS
                 + getUsageInfoForExitCommand() + LS
                 + getUsageInfoForHelpCommand();
@@ -1110,6 +1149,13 @@ public class AddressBook {
         return String.format(MESSAGE_COMMAND_HELP, COMMAND_DELETE_WORD, COMMAND_DELETE_DESC) + LS
                 + String.format(MESSAGE_COMMAND_HELP_PARAMETERS, COMMAND_DELETE_PARAMETER) + LS
                 + String.format(MESSAGE_COMMAND_HELP_EXAMPLE, COMMAND_DELETE_EXAMPLE) + LS;
+    }
+
+    /** Returns the string for showing 'delete_email' command usage instruction */
+    private static String getUsageInfoForDeleteByEmailCommand() {
+        return String.format(MESSAGE_COMMAND_HELP, COMMAND_DELETE_BY_EMAIL_WORD, COMMAND_DELETE_BY_EMAIL_DESC) + LS
+                + String.format(MESSAGE_COMMAND_HELP_PARAMETERS, COMMAND_DELETE_BY_EMAIL_PARAMETER) + LS
+                + String.format(MESSAGE_COMMAND_HELP_EXAMPLE, COMMAND_DELETE_BY_EMAIL_EXAMPLE) + LS;
     }
 
     /** Returns string for showing 'clear' command usage instruction */
